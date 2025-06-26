@@ -38,14 +38,40 @@ class ModelTraner:
             models = {
                 "Random Forest": RandomForestRegressor(),
                 "Decison Tree" : DecisionTreeRegressor(),
-                "Linerar Regressor" : LinearRegression(),
+                "Linear Regressor" : LinearRegression(),  # <-- fixed typo here
                 "K-neighbors Regressor" : KNeighborsRegressor(),
                 "XGB Regressor": XGBRegressor(),
                 "Cat boosting Regressor": CatBoostRegressor(),
                 "Adaboosting Regressor" : AdaBoostRegressor()
             }
 
-            model_report:dict = evaluate_model(X_train=X_train, y_train = y_train, X_test = X_test, y_test = y_test, models = models)
+            params = {
+                "Decison Tree":{
+                    'criterion':['squared_error', 'friedman_mse', 'absolute_error', 'poisson']
+                },
+                "Random Forest":{
+                    'n_estimators':[8,16,32,64,128,256]
+                },
+                "Linear Regressor": {},  # <-- add this line
+                "K-neighbors Regressor":{
+                    'n_neighbors':[5,7,9,11]
+                },
+                "XGB Regressor":{
+                    'learning_rate':[.1,.01,.05,.001],
+                    'n_estimators':[8,16,32,64,128,256]
+                },
+                "Cat boosting Regressor":{
+                    'depth':[6,8,12],
+                    'learning_rate':[.1,.01,.05,.001],
+                    'iterations':[30,50,100]
+                },
+                "Adaboosting Regressor":{
+                    'learning_rate':[.1,.01,.05,.001],
+                    'n_estimators':[8,16,32,64,128,256]
+                }
+            }
+
+            model_report:dict = evaluate_model(X_train=X_train, y_train = y_train, X_test = X_test, y_test = y_test, models = models, params = params)
 
             best_model_score = max(sorted(model_report.values()))
 
